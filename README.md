@@ -160,6 +160,7 @@ var root = sel.root();
 ## 3. Transform Post
 
 > Take any JSON object, select and transform with a template JSON object
+
 ```js
 var data = {
     "id": 1
@@ -182,6 +183,7 @@ var template = {
   }
 }
 ```
+
 ### function httpPost
 
 this function allow send post and return data of dataset extern
