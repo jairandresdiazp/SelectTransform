@@ -2,8 +2,7 @@
 
 JSON Selector + Transformer
 
-- Website: [https://selecttransform.github.io/site](https://selecttransform.github.io/site)
-- Twitter: [@selecttransform](https://www.twitter.com/selecttransform)
+- Website: [https://jairandresdiazp.github.io/SelectTransform/](https://jairandresdiazp.github.io/SelectTransform/)
 
 ---
 
@@ -157,6 +156,47 @@ var root = sel.root();
 //    }]
 //  }
 ```
+
+## 3. Transform Post
+
+> Take any JSON object, select and transform with a template JSON object
+```js
+var data = {
+    "id": 1
+};
+
+var template = {
+  "test":"{{id.toString().trim()}}",
+  "test2":"{{httpPost('webhook/860001619',null)}}"
+}
+```
+
+> Get the result
+
+```js
+{
+  "test": "1",
+  "test2": {
+    "error": true,
+    "message": "key invalid"
+  }
+}
+```
+### function httpPost
+
+this function allow send post and return data of dataset extern
+
+| Param | Description |Required |
+| ------ | ------ | ------ |
+| URL | url where the POST is made | yes|
+| Headers | arrangement with the following structure that represents the header of the POST to send, by default it is assigned "Content-Type", "application / json" the others must be specified if not required you must send null, eg [{'name':'key','value':'123571253'}] | yes|
+| body | body of the request in JSON format if it does not exist, do not send the value eg httpPost ('url', null)}} | not|
+
+in case of requiring values of the data as parameter of the function use the syntax [[data]]  httpPost('[[id]]',null)
+
+#### example
+
+httpPost('webhook/860001619',[{'name':'key','value':'123571253'}],{'value':122})
 
 ---
 
