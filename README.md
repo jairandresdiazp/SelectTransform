@@ -1,5 +1,7 @@
 # ST
 
+It is based on the original package [st.js](https://github.com/SelectTransform/st.js)
+
 JSON Selector + Transformer
 
 - Website: [https://jairandresdiazp.github.io/SelectTransform/](https://jairandresdiazp.github.io/SelectTransform/)
