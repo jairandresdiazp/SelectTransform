@@ -9,7 +9,7 @@ JSON Selector + Transformer
 
 ---
 
-![preview](https://gliechtenstein.github.io/images/st.gif)
+![preview](https://raw.githubusercontent.com/jairandresdiazp/SelectTransform/master/demo.gif)
 
 1. **Select:** Query any JSON tree to select exactly the subtree you are looking for.
 2. **Transform:** Transform any JSON object to another by parsing with a template, also written in JSON
