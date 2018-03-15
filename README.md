@@ -241,5 +241,5 @@ const parsed = ST.select({ "items": [1,2,3,4] })
                 .root();
 ```
 
-### Learn more at [selecttransform.github.io/site](https://selecttransform.github.io/site)
+### Learn more at [https://github.com/jairandresdiazp/SelectTransform/wiki](https://github.com/jairandresdiazp/SelectTransform/wiki)
 
