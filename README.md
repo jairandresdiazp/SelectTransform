@@ -196,7 +196,12 @@ this function allow send post and return data of dataset extern
 | Headers | arrangement with the following structure that represents the header of the POST to send, by default it is assigned "Content-Type", "application / json" the others must be specified if not required you must send null, eg [{'name':'key','value':'123571253'}] | yes|
 | body | body of the request in JSON format if it does not exist, do not send the value eg httpPost ('url', null)}} | not|
 
-in case of requiring values of the data as parameter of the function use the syntax [[data]]  httpPost('[[id]]',null)
+in case of requiring values of the data as parameter of the function use the syntax
+in case of requiring values of the data as parameter of the function use the syntax
+
+```js
+[[data]]  httpPost('[[id]]',null)
+``` 
 
 ### example
 
