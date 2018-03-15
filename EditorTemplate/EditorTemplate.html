@@ -1,0 +1,134 @@
+<html>
+<head>
+    <title>Editor Template</title>
+</head>
+<script src='https://rawgit.com/intercellular/cell/inherit/cell.js'></script>
+<script src='../javascripts/stjs/st.js?v106'></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css" rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.25.0/codemirror.css" rel='stylesheet'>
+<link href='editortemplate.css' rel='stylesheet'>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.25.0/codemirror.min.js"></script>
+<script src='https://tojson.co/node_modules/jsonlint/lib/jsonlint.js'></script>
+<script src='https://tojson.co/node_modules/codemirror/addon/lint/lint.js'></script>
+<script src='https://tojson.co/node_modules/codemirror/addon/lint/javascript-lint.js'></script>
+<script src='https://tojson.co/node_modules/codemirror/addon/lint/json-lint.js'></script>
+<script src='https://tojson.co/node_modules/codemirror/addon/edit/closebrackets.js'></script>
+<script src='https://tojson.co/node_modules/codemirror/addon/edit/matchbrackets.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.25.0/mode/javascript/javascript.js"></script>
+<style>
+    .container-fluid,
+    .row,
+    .col {
+        height: 100%;
+    }
+
+    html,
+    body {
+        height: 100%;
+        overflow: hidden;
+    }
+</style>
+<script>
+    if (localStorage.getItem("data") == '' || localStorage.getItem("data") == null) {
+        localStorage.setItem("data", "var data = {\r\n\t\"id\" : \"a323a06b0e61fec7d3d33eb627ce4be5\",\r\n\t\"document_id\" : \"de2a9bb5c75540dca222f87914b35905\",\r\n\t\"remote_id\" : \"165d1530-102a-11e8-b7a2-af53f2863780\",\r\n\t\"file_name\" : \"Crystal Reports - Factura nacional AvecolSAS V5.pdf\",\r\n\t\"media_link\" : \"https:\\\/\\\/api.docparser.com\\\/v1\\\/document\\\/media\\\/r5prbWZtXtLJ253M1yOT188J_YJ0VOf-kNP7rcS_1_6loKpaMeQ4h8KphNUOCaoW8tVehU9qaSZkDKJ4i3LPU_mT58FseqxB8WIdbA7ravc\",\r\n\t\"media_link_original\" : \"https:\\\/\\\/api.docparser.com\\\/v1\\\/document\\\/media\\\/r5prbWZtXtLJ253M1yOT188J_YJ0VOf-kNP7rcS_1_6loKpaMeQ4h8KphNUOCaoW8tVehU9qaSZkDKJ4i3LPU_mT58FseqxB8WIdbA7ravc\\\/original\",\r\n\t\"media_link_data\" : \"https:\\\/\\\/api.docparser.com\\\/v1\\\/document\\\/media\\\/r5prbWZtXtLJ253M1yOT188J_YJ0VOf-kNP7rcS_1_6loKpaMeQ4h8KphNUOCaoW8tVehU9qaSZkDKJ4i3LPU_mT58FseqxB8WIdbA7ravc\\\/data\",\r\n\t\"uploaded_at\" : \"2018-02-12T19:22:39+00:00\",\r\n\t\"processed_at\" : \"2018-03-06T21:28:50+00:00\",\r\n\t\"fecha\" : {\r\n\t\t\"match\" : \"12\\\/02\\\/2018\",\r\n\t\t\"iso8601\" : \"2018-12-02\"\r\n\t},\r\n\t\"numero_documento\" : \"170252\",\r\n\t\"tipo_documentoad\" : \"31\",\r\n\t\"nombread\" : \"Sodimac Colombia S.A.\",\r\n\t\"direccionad\" : \"Avda. Cra. 104 No. 148-07C. Cial Plaza Imperial Loc. 1-52\",\r\n\t\"paisad\" : \"\",\r\n\t\"correoad\" : \"jnietov@homecenter.co\",\r\n\t\"detalle\" : [\r\n\t\t{\r\n\t\t\t\"key_0\" : \"0030\",\r\n\t\t\t\"key_1\" : \"704037300156\",\r\n\t\t\t\"key_2\" : \"Roseta 200w retie blanco varios\",\r\n\t\t\t\"key_3\" : \"88.00\",\r\n\t\t\t\"key_4\" : \"1000.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"88000.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"0206TA\",\r\n\t\t\t\"key_1\" : \"704037361713\",\r\n\t\t\t\"key_2\" : \"Toma tel amer (rj11) beige l200\",\r\n\t\t\t\"key_3\" : \"12.00\",\r\n\t\t\t\"key_4\" : \"1220.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"14640.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"13000-0\",\r\n\t\t\t\"key_1\" : \"704037366169\",\r\n\t\t\t\"key_2\" : \"Placa ciega blanco l. boreale\",\r\n\t\t\t\"key_3\" : \"50.00\",\r\n\t\t\t\"key_4\" : \"1769.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"88450.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"13001\",\r\n\t\t\t\"key_1\" : \"704037317253\",\r\n\t\t\t\"key_2\" : \"Int senc blanco l. boreale\",\r\n\t\t\t\"key_3\" : \"200.00\",\r\n\t\t\t\"key_4\" : \"2948.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"589600.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"13002\",\r\n\t\t\t\"key_1\" : \"704037317277\",\r\n\t\t\t\"key_2\" : \"Int conm blanco l. boreale\",\r\n\t\t\t\"key_3\" : \"175.00\",\r\n\t\t\t\"key_4\" : \"3257.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"569975.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"13005\",\r\n\t\t\t\"key_1\" : \"704037352797\",\r\n\t\t\t\"key_2\" : \"Pulsador blanco l. boreale\",\r\n\t\t\t\"key_3\" : \"50.00\",\r\n\t\t\t\"key_4\" : \"3285.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"164250.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"13006\",\r\n\t\t\t\"key_1\" : \"704037365940\",\r\n\t\t\t\"key_2\" : \"Toma amer blanco l. boreale\",\r\n\t\t\t\"key_3\" : \"30.00\",\r\n\t\t\t\"key_4\" : \"2310.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"69300.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"13006TA\",\r\n\t\t\t\"key_1\" : \"704037366046\",\r\n\t\t\t\"key_2\" : \"Toma tel amer (rj11) blanco l. boreale\",\r\n\t\t\t\"key_3\" : \"45.00\",\r\n\t\t\t\"key_4\" : \"2864.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"128880.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"13006TVA\",\r\n\t\t\t\"key_1\" : \"704037366022\",\r\n\t\t\t\"key_2\" : \"Toma tva blanco l. boreale\",\r\n\t\t\t\"key_3\" : \"100.00\",\r\n\t\t\t\"key_4\" : \"2443.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"244300.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"13011\",\r\n\t\t\t\"key_1\" : \"704037317291\",\r\n\t\t\t\"key_2\" : \"Int doble blanco l. boreale\",\r\n\t\t\t\"key_3\" : \"25.00\",\r\n\t\t\t\"key_4\" : \"4212.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"105300.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"13013\",\r\n\t\t\t\"key_1\" : \"704037317338\",\r\n\t\t\t\"key_2\" : \"Int triple blanco l. boreale\",\r\n\t\t\t\"key_3\" : \"50.00\",\r\n\t\t\t\"key_4\" : \"5981.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"299050.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"13016\",\r\n\t\t\t\"key_1\" : \"704037398023\",\r\n\t\t\t\"key_2\" : \"Int senc+toma amer blanco l. boreale\",\r\n\t\t\t\"key_3\" : \"75.00\",\r\n\t\t\t\"key_4\" : \"4040.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"303000.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"13016N\",\r\n\t\t\t\"key_1\" : \"704037398061\",\r\n\t\t\t\"key_2\" : \"Int senc+toma p\\\/tierra 2p+t blanco l. boreale\",\r\n\t\t\t\"key_3\" : \"175.00\",\r\n\t\t\t\"key_4\" : \"4605.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"805875.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"13022\",\r\n\t\t\t\"key_1\" : \"704037317314\",\r\n\t\t\t\"key_2\" : \"Int doble conm blanco l. boreale\",\r\n\t\t\t\"key_3\" : \"25.00\",\r\n\t\t\t\"key_4\" : \"4858.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"121450.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"13023\",\r\n\t\t\t\"key_1\" : \"704037317352\",\r\n\t\t\t\"key_2\" : \"Int triple conm blanco l. boreale\",\r\n\t\t\t\"key_3\" : \"50.00\",\r\n\t\t\t\"key_4\" : \"6683.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"334150.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"13026N\",\r\n\t\t\t\"key_1\" : \"704037398085\",\r\n\t\t\t\"key_2\" : \"Int conm+toma p\\\/tierra 2p+t blanco l. boreale\",\r\n\t\t\t\"key_3\" : \"25.00\",\r\n\t\t\t\"key_4\" : \"5111.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"127775.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"13066\",\r\n\t\t\t\"key_1\" : \"704037365964\",\r\n\t\t\t\"key_2\" : \"Toma doble amer blanco l. boreale\",\r\n\t\t\t\"key_3\" : \"90.00\",\r\n\t\t\t\"key_4\" : \"2810.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"252900.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"13066GFCI\",\r\n\t\t\t\"key_1\" : \"704037366008\",\r\n\t\t\t\"key_2\" : \"Toma doble falla tierra15a  blanco l. boreale\",\r\n\t\t\t\"key_3\" : \"16.00\",\r\n\t\t\t\"key_4\" : \"18950.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"303200.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"13066N\",\r\n\t\t\t\"key_1\" : \"704037365988\",\r\n\t\t\t\"key_2\" : \"Toma doble p\\\/tierra 2p+t blanco l. boreale\",\r\n\t\t\t\"key_3\" : \"2.60\",\r\n\t\t\t\"key_4\" : \"3454.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"8980400.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"13066TA4TVA\",\r\n\t\t\t\"key_1\" : \"704037398122\",\r\n\t\t\t\"key_2\" : \"Toma tel amer4hilos(rj11)+tva blanco l. boreale\",\r\n\t\t\t\"key_3\" : \"80.00\",\r\n\t\t\t\"key_4\" : \"5223.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"417840.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"18001\",\r\n\t\t\t\"key_1\" : \"704037312920\",\r\n\t\t\t\"key_2\" : \"Int senc arm blanco artica\",\r\n\t\t\t\"key_3\" : \"80.00\",\r\n\t\t\t\"key_4\" : \"3540.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"283200.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"18001-LP\",\r\n\t\t\t\"key_1\" : \"704037312845\",\r\n\t\t\t\"key_2\" : \"Int senc lp arm blanco artica\",\r\n\t\t\t\"key_3\" : \"60.00\",\r\n\t\t\t\"key_4\" : \"5300.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"318000.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"18002-LP\",\r\n\t\t\t\"key_1\" : \"704037312869\",\r\n\t\t\t\"key_2\" : \"Int conm arm lp blanco artica\",\r\n\t\t\t\"key_3\" : \"40.00\",\r\n\t\t\t\"key_4\" : \"5610.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"224400.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"18005-LP\",\r\n\t\t\t\"key_1\" : \"704037351332\",\r\n\t\t\t\"key_2\" : \"Pulsador lp arm blanco artica\",\r\n\t\t\t\"key_3\" : \"40.00\",\r\n\t\t\t\"key_4\" : \"5430.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"217200.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"18006AU\",\r\n\t\t\t\"key_1\" : \"704037365018\",\r\n\t\t\t\"key_2\" : \"Toma audio arm blanco artica\",\r\n\t\t\t\"key_3\" : \"30.00\",\r\n\t\t\t\"key_4\" : \"7710.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"231300.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"18016-LP\",\r\n\t\t\t\"key_1\" : \"704037392595\",\r\n\t\t\t\"key_2\" : \"Int senc lp+toma amer arm blanco artica\",\r\n\t\t\t\"key_3\" : \"20.00\",\r\n\t\t\t\"key_4\" : \"6260.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"125200.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"18016N\",\r\n\t\t\t\"key_1\" : \"704037393899\",\r\n\t\t\t\"key_2\" : \"Int senc+toma p\\\/tierra 2p+t arm blanco artica\",\r\n\t\t\t\"key_3\" : \"20.00\",\r\n\t\t\t\"key_4\" : \"6730.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"134600.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"18016N-LP\",\r\n\t\t\t\"key_1\" : \"704037393875\",\r\n\t\t\t\"key_2\" : \"Int senc lp+toma p\\\/tierra 2p+t arm blanco artica\",\r\n\t\t\t\"key_3\" : \"40.00\",\r\n\t\t\t\"key_4\" : \"8790.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"351600.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"18022-LP\",\r\n\t\t\t\"key_1\" : \"704037312890\",\r\n\t\t\t\"key_2\" : \"Int doble conm lp arm blanco artica\",\r\n\t\t\t\"key_3\" : \"40.00\",\r\n\t\t\t\"key_4\" : \"9500.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"380000.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"18055-LP\",\r\n\t\t\t\"key_1\" : \"704037351349\",\r\n\t\t\t\"key_2\" : \"Pulsador doble lp arm blanco artica\",\r\n\t\t\t\"key_3\" : \"20.00\",\r\n\t\t\t\"key_4\" : \"9320.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"186400.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"18066GFCI\",\r\n\t\t\t\"key_1\" : \"704037362925\",\r\n\t\t\t\"key_2\" : \"Toma doble falla tierra15a  arm blanco artica\",\r\n\t\t\t\"key_3\" : \"22.00\",\r\n\t\t\t\"key_4\" : \"21930.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"482460.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"18066TA4\",\r\n\t\t\t\"key_1\" : \"704037362741\",\r\n\t\t\t\"key_2\" : \"Toma doble tel amer4hilos(rj11)arm blanco artica\",\r\n\t\t\t\"key_3\" : \"28.00\",\r\n\t\t\t\"key_4\" : \"6120.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"171360.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"1901\",\r\n\t\t\t\"key_1\" : \"704037310100\",\r\n\t\t\t\"key_2\" : \"Int senc blanco abitare\",\r\n\t\t\t\"key_3\" : \"30.00\",\r\n\t\t\t\"key_4\" : \"2510.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"75300.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"1902-LP\",\r\n\t\t\t\"key_1\" : \"704037310759\",\r\n\t\t\t\"key_2\" : \"Int conm  lp blanco abitare\",\r\n\t\t\t\"key_3\" : \"25.00\",\r\n\t\t\t\"key_4\" : \"5060.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"126500.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"1911-LP\",\r\n\t\t\t\"key_1\" : \"704037311343\",\r\n\t\t\t\"key_2\" : \"Int doble lp blanco abitare\",\r\n\t\t\t\"key_3\" : \"50.00\",\r\n\t\t\t\"key_4\" : \"7480.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"374000.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"1916\",\r\n\t\t\t\"key_1\" : \"704037391932\",\r\n\t\t\t\"key_2\" : \"Int senc+toma amer blanco abitare\",\r\n\t\t\t\"key_3\" : \"50.00\",\r\n\t\t\t\"key_4\" : \"3630.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"181500.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"1966N\",\r\n\t\t\t\"key_1\" : \"704037360983\",\r\n\t\t\t\"key_2\" : \"Toma doble p\\\/tierra 2p+t blanco abitare\",\r\n\t\t\t\"key_3\" : \"40.00\",\r\n\t\t\t\"key_4\" : \"2930.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"117200.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"33804\",\r\n\t\t\t\"key_1\" : \"704037338043\",\r\n\t\t\t\"key_2\" : \"Caja mon. 4 ctos\",\r\n\t\t\t\"key_3\" : \"12.00\",\r\n\t\t\t\"key_4\" : \"11500.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"138000.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"78V\",\r\n\t\t\t\"key_1\" : \"32664205606\",\r\n\t\t\t\"key_2\" : \"Toma doble de sobreponer marfil\",\r\n\t\t\t\"key_3\" : \"240.00\",\r\n\t\t\t\"key_4\" : \"5500.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"1320000.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"902\",\r\n\t\t\t\"key_1\" : \"704037310452\",\r\n\t\t\t\"key_2\" : \"Int conm marfil abitare\",\r\n\t\t\t\"key_3\" : \"30.00\",\r\n\t\t\t\"key_4\" : \"2760.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"82800.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"911\",\r\n\t\t\t\"key_1\" : \"704037311053\",\r\n\t\t\t\"key_2\" : \"Int doble marfil abitare\",\r\n\t\t\t\"key_3\" : \"25.00\",\r\n\t\t\t\"key_4\" : \"3590.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"89750.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"916\",\r\n\t\t\t\"key_1\" : \"704037391956\",\r\n\t\t\t\"key_2\" : \"Int senc+toma amer marfil abitare\",\r\n\t\t\t\"key_3\" : \"50.00\",\r\n\t\t\t\"key_4\" : \"4100.50\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"205025.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"966\",\r\n\t\t\t\"key_1\" : \"704037360631\",\r\n\t\t\t\"key_2\" : \"Toma doble amer marfil abitare\",\r\n\t\t\t\"key_3\" : \"135.00\",\r\n\t\t\t\"key_4\" : \"2530.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"341550.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"966N\",\r\n\t\t\t\"key_1\" : \"704037361003\",\r\n\t\t\t\"key_2\" : \"Toma doble p\\\/tierra 2p+t marfil abitare\",\r\n\t\t\t\"key_3\" : \"40.00\",\r\n\t\t\t\"key_4\" : \"2930.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"117200.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"PR82008I\",\r\n\t\t\t\"key_1\" : \"704037820111\",\r\n\t\t\t\"key_2\" : \"Nuova roseta 200w blanca x 6 unds propack\",\r\n\t\t\t\"key_3\" : \"288.00\",\r\n\t\t\t\"key_4\" : \"6900.00\",\r\n\t\t\t\"key_5\" : \"19.00\",\r\n\t\t\t\"key_6\" : \"1987200.00\"\r\n\t\t}\r\n\t],\r\n\t\"numero_documentoad\" : \"800242106\",\r\n\t\"ciudadad\" : \"bogota\",\r\n\t\"tipo_contibuyententead\" : \"1\",\r\n\t\"impuesto\" : [\r\n\t\t{\r\n\t\t\t\"key_0\" : \"C\\u00f3d ReteICA\",\r\n\t\t\t\"key_1\" : \"%\",\r\n\t\t\t\"key_2\" : \"Val.ReteICA\",\r\n\t\t\t\"key_3\" : \"C\\u00f3d ReteIVA\",\r\n\t\t\t\"key_4\" : \"%\",\r\n\t\t\t\"key_5\" : \"Val.ReteIVA\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"7.00\",\r\n\t\t\t\"key_1\" : \"0.70\",\r\n\t\t\t\"key_2\" : \"158329.36\",\r\n\t\t\t\"key_3\" : \"6.00\",\r\n\t\t\t\"key_4\" : \"15.00\",\r\n\t\t\t\"key_5\" : \"644626.68\"\r\n\t\t}\r\n\t],\r\n\t\"nit_empresa\" : \"\",\r\n\t\"tipo_documento\" : \"1\",\r\n\t\"hora_documento\" : \"10:20\",\r\n\t\"tipo_regimead\" : \"1\",\r\n\t\"totales\" : [\r\n\t\t{\r\n\t\t\t\"key_0\" : \"Vr. Bruto\",\r\n\t\t\t\"key_1\" : \"22618480.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"Descuento 0 %\",\r\n\t\t\t\"key_1\" : \"0.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"Vr. Neto\",\r\n\t\t\t\"key_1\" : \"22618480.00\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"01 - IVA\",\r\n\t\t\t\"key_1\" : \"4297511.20\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"Impuestos\",\r\n\t\t\t\"key_1\" : \"802956.04\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key_0\" : \"Total a pagar\",\r\n\t\t\t\"key_1\" : \"26113035.16\"\r\n\t\t}\r\n\t],\r\n\t\"tipo\" : \"Invoice\",\r\n\t\"moneda\" : \"COP\"\r\n};\r\n\r\nvar template = {\r\n    \"UrlPdf\": \"http:\/\/40.70.10.202:8080\/app\/pdf\/2\/{{remote_id}}\",\r\n    \"originalRequest\": [{\r\n            \"{{#if tipo === 'Invoice' && moneda=== 'COP'}}\": {\r\n                \"IdBusiness\": \"860001619\",\r\n                \"Currency\": \"{{moneda}}\",\r\n                \"DocumentType\": \"{{tipo}}\",\r\n                \"BusinessUnit\": \"AveColombiana\",\r\n                \"BroadCastDate\": \"{{fecha.iso8601}}\",\r\n                \"BroadCastTime\": \"{{hora_documento}}:00\",\r\n                \"IdMotivo\": \"{{tipo_documento}}\",\r\n                \"Note\": \"\",\r\n                \"InvoiceId\": \"{{numero_documento}}\",\r\n                \"Prefix\": \"\",\r\n                \"NumberRelatedDocument\": \"\",\r\n                \"AccountingCustomerParty\": {\r\n                    \"Party\": {\r\n                        \"PartyIdentification\": {\r\n                            \"ID\": \"{{numero_documentoad}}\",\r\n                            \"schemeID\": \"{{tipo_documentoad}}\"\r\n                        },\r\n                        \"Name\": \"{{nombread}}\",\r\n                        \"PhysicalLocation\": {\r\n                            \"Address\": {\r\n                                \"Line\": \"{{direccionad}}\",\r\n                                \"CountryCode\": \"CO\",\r\n                                \"Department\": \"{{ciudadad}}\",\r\n                                \"CitySubdivisionName\": \"{{ciudadad}}\",\r\n                                \"CityName\": \"{{ciudadad}}\"\r\n                            }\r\n                        },\r\n                        \"PartyTaxScheme\": {\r\n                            \"TaxLevelCode\": \"{{tipo_regimead}}\"\r\n                        },\r\n                        \"Person\": {\r\n                            \"FirstName\": \"{{nombread}}\",\r\n                            \"FamilyName\": \"\",\r\n                            \"MiddleName\": \"\",\r\n                            \"Telephone\": \"\",\r\n                            \"Email\": \"{{correoad}}\"\r\n                        }\r\n                    },\r\n                    \"AdditionalAccountID\": \"{{tipo_contibuyententead}}\"\r\n                },\r\n                \"TaxTotal\": [{\r\n                        \"ID\": \"01\",\r\n                        \"TaxAmount\": \"{{Number(totales[3].key_1).toFixed(2)}}\",\r\n                        \"TaxEvidenceIndicator\": \"true\"\r\n                    },\r\n                    {\r\n                        \"ID\": \"02\",\r\n                        \"TaxAmount\": \"0.00\",\r\n                        \"TaxEvidenceIndicator\": \"true\"\r\n                    },\r\n                    {\r\n                        \"ID\": \"03\",\r\n                        \"TaxAmount\": \"{{Number(impuesto[1].key_2).toFixed(2)}}\",\r\n                        \"TaxEvidenceIndicator\": \"true\",\r\n                        \"TaxableAmount\": \"{{Number(totales[2].key_1).toFixed(2)}}\",\r\n                        \"Percent\": \"{{Number(impuesto[1].key_1).toFixed(2)}}\"\r\n                    }\r\n                ],\r\n                \"LegalMonetaryTotal\": {\r\n                    \"LineExtensionAmount\": \"{{Number(totales[2].key_1).toFixed(2)}}\",\r\n                    \"TaxExclusiveAmount\": \"{{Number(totales[0].key_1-totales[1].key_1).toFixed(2)}}\",\r\n                    \"PayableAmount\": \"{{Number(totales[5].key_1).toFixed(2)}}\"\r\n                },\r\n                \"DocumentLines\": {\r\n                    \"{{#each detalle}}\": {\r\n                        \"TypeLine\": \"1\",\r\n                        \"Item\": {\r\n                            \"Description\": \"{{key_2}}\"\r\n                        },\r\n                        \"PriceAmount\": \"{{Number(key_4).toFixed(2)}}\",\r\n                        \"ID\": \"{{($index+1).toString()}}\",\r\n                        \"InvoicedQuantity\": \"{{Number(key_3).toFixed(2)}}\",\r\n                        \"LineExtensionAmount\": \"{{Number(key_6).toFixed(2)}}\",\r\n                        \"TaxLine\": [{\r\n                                \"ID\": \"01\",\r\n                                \"TaxAmount\": \"{{Number((Number(key_6).toFixed(2)*Number(key_5).toFixed(2))\/100).toFixed(2)}}\",\r\n                                \"Percent\": \"{{Number(key_5).toFixed(2)}}\"\r\n                            },\r\n                            {\r\n                                \"ID\": \"02\",\r\n                                \"TaxAmount\": \"0.00\",\r\n                                \"Percent\": \"0.00\"\r\n                            }\r\n                        ],\r\n                        \"SubDetalles\": [{\r\n                            \"TypeLine\": \"1\",\r\n                            \"Item\": {\r\n                                \"Description\": \"\"\r\n                            },\r\n                            \"Price\": {\r\n                                \"PriceAmount\": \"0.00\"\r\n                            },\r\n                            \"Tax\": [\r\n\r\n                            ]\r\n                        }]\r\n                    }\r\n                }\r\n            }\r\n        },\r\n        {\r\n            \"{{#elseif tipo === 'DebitNote'}}\": {\r\n                \r\n            }\r\n        },\r\n        {\r\n            \"{{#elseif tipo === 'CreditNote'}}\": {\r\n                \r\n            }\r\n        }\r\n    ]\r\n}")
+    }
+    var content = {
+        source: localStorage.getItem("data"),
+        code: "ST.select(data)\n\t.transformWith(template)\n\t.root()"
+    };
+
+    var editor = {
+        $cell: {
+            codemirror: function(options) {
+                return {
+                    $type: "textarea",
+                    id: options.id,
+                    _ed: null,
+                    $init: function() {
+                        for (var key in options) {
+                            if (key !== '$inherit') this[key] = options[key];
+                        }
+                        this._ed = CodeMirror.fromTextArea(this, {
+                            lineNumbers: true,
+                            lineWrapping: true,
+                            lint: true,
+                            styleActiveLine: true,
+                            autoCloseBrackets: true,
+                            matchBrackets: true,
+                            viewportMargin: true,
+                            theme: "railscasts",
+                            gutters: ["CodeMirror-lint-markers"]
+                        })
+                        if (options.onchange) this._ed.on('change', options.onchange.bind(this))
+                        var wrapper = this._ed.getWrapperElement()
+                        wrapper.setAttribute("class", wrapper.getAttribute("class") + " " + options.class)
+                        if (options.style) wrapper.style = options.style
+                        if (options.$init) options.$init.call(this);
+                    },
+                    _update: function(o) {
+                        if (this._ed) {
+                            this._ed.getDoc().setValue(o)
+                        } else {
+                            setTimeout(function() {
+                                this._ed.getDoc().setValue(o)
+                            }.bind(this), 0);
+                        }
+                    },
+                    _get: function() {
+                        if (this._ed) return this._ed.getDoc().getValue()
+                        else return null;
+                    }
+                }
+            }
+        }
+    };
+
+    var app = {
+        $cell: true,
+        class: 'container-fluid',
+        _u: function() {
+            var source = document.querySelector("#source")._get();
+            localStorage.setItem("data", source);
+            //var evaluation = document.querySelector("#code")._get();
+			var evaluation = content.code;
+            if (source && evaluation) {
+                var result = eval(source + "\n" + evaluation);
+                document.querySelector("#result")._update(JSON.stringify(result, null, 2));
+            }
+        },
+        $components: [{
+            class: 'row',
+            $components: [{
+                    id: 'source',
+                    $inherit: 'codemirror',
+                    class: 'col',
+                    value: content.source,
+                    $init: function() {
+                        this._u();
+                    },
+                    onchange: function(e) {
+                        this._u();
+                    }
+                },
+                /*{
+                    id: 'code',
+                    $inherit: 'codemirror',
+                    class: 'col',
+                    value: content.code,
+                    $init: function() {
+                        this._u();
+                    },
+                    onchange: function(e) {
+                        this._u();
+                    }
+                },*/
+                {
+                    id: 'result',
+                    $inherit: 'codemirror',
+                    class: 'col'
+                }
+            ]
+        }]
+    };
+</script>
+</html>
