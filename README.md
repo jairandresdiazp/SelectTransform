@@ -5,6 +5,7 @@ It is based on the original package [st.js](https://github.com/SelectTransform/s
 JSON Selector + Transformer
 
 - Website: [https://jairandresdiazp.github.io/SelectTransform/](https://jairandresdiazp.github.io/SelectTransform/)
+- Editor: [https://jairandresdiazp.github.io/SelectTransform/EditorTemplate/EditorTemplate](https://jairandresdiazp.github.io/SelectTransform/EditorTemplate/EditorTemplate)
 
 ---
 
