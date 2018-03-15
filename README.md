@@ -7,8 +7,6 @@ JSON Selector + Transformer
 - Website: [https://jairandresdiazp.github.io/SelectTransform/](https://jairandresdiazp.github.io/SelectTransform/)
 - Editor: [https://jairandresdiazp.github.io/SelectTransform/EditorTemplate/EditorTemplate](https://jairandresdiazp.github.io/SelectTransform/EditorTemplate/EditorTemplate)
 
----
-
 ![preview](https://raw.githubusercontent.com/jairandresdiazp/SelectTransform/master/demo.gif)
 
 1. **Select:** Query any JSON tree to select exactly the subtree you are looking for.
@@ -207,8 +205,6 @@ in case of requiring values of the data as parameter of the function use the syn
 ### example
 
 httpPost('webhook/860001619',[{'name':'key','value':'123571253'}],{'value':122})
-
----
 
 # Usage
 
