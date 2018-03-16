@@ -610,13 +610,13 @@
             try {
                 URL = decodeURIComponent(URL);
                 headers = decodeURIComponent(headers);
-				headers = JSON.stringify(eval('('+headers+')'));
-				headers= JSON.parse(headers);
+                headers = JSON.stringify(eval('(' + headers + ')'));
+                headers = JSON.parse(headers);
                 body = decodeURIComponent(body);
-				body = JSON.stringify(eval('('+body+')'));
-				if(body ==="null" || body ==="undefined"){
-					body={};
-				}
+                body = JSON.stringify(eval('(' + body + ')'));
+                if (body === "null" || body === "undefined") {
+                    body = {};
+                }
                 var data = JSON.stringify(body);
                 var xhr = new XMLHttpRequest();
                 xhr.withCredentials = true;
@@ -626,11 +626,11 @@
                     headers.forEach(setHeader);
 
                     function setHeader(item, indexHeader) {
-						if(typeof item.value === 'object'){
-							xhr.setRequestHeader(item.name,JSON.stringify(item.value));
-						}else{
-							xhr.setRequestHeader(item.name,item.value);
-						}
+                        if (typeof item.value === 'object') {
+                            xhr.setRequestHeader(item.name, JSON.stringify(item.value));
+                        } else {
+                            xhr.setRequestHeader(item.name, item.value);
+                        }
                     }
                 }
                 xhr.send(data);
