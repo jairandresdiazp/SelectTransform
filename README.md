@@ -206,7 +206,9 @@ the parameters of the function must be encoded [see](https://www.freeformatter.c
 
 ### example
 
-httpPost('webhook%2F860001619',%5B%7B%27name%27%3A%27key%27%2C%27value%27%3A%27123571253%27%7D%5D,%7B%27value%27%3A122%7D)
+```js
+httpPost('webhook%2F860001619','%5B%7B%27name%27%3A%27key%27%2C%27value%27%3A%27123571253%27%7D%5D,%7B%27value%27%3A122%7D')
+```
 
 # Usage
 
