@@ -169,7 +169,7 @@ var data = {
 
 var template = {
   "test":"{{id.toString().trim()}}",
-  "test2":"{{httpPost('webhook/860001619',null)}}"
+  "test2":"{{httpPost('webhook%2F860001619',null)}}"
 }
 ```
 
@@ -187,7 +187,7 @@ var template = {
 
 ### function httpPost
 
-this function allow send post and return data of dataset extern
+allows to recover by post any value of an external dataset
 
 | Param | Description |Required |
 | ------ | ------ | ------ |
@@ -195,16 +195,18 @@ this function allow send post and return data of dataset extern
 | Headers | arrangement with the following structure that represents the header of the POST to send, by default it is assigned "Content-Type", "application / json" the others must be specified if not required you must send null, eg [{'name':'key','value':'123571253'}] | yes|
 | body | body of the request in JSON format if it does not exist, do not send the value eg httpPost ('url', null)}} | not|
 
-in case of requiring values of the data as parameter of the function use the syntax
+
 in case of requiring values of the data as parameter of the function use the syntax
 
 ```js
 [[data]]  httpPost('[[id]]',null)
 ``` 
 
+the parameters of the function must be encoded [see](https://www.freeformatter.com/url-encoder.html) 
+
 ### example
 
-httpPost('webhook/860001619',[{'name':'key','value':'123571253'}],{'value':122})
+httpPost('webhook%2F860001619',%5B%7B%27name%27%3A%27key%27%2C%27value%27%3A%27123571253%27%7D%5D,%7B%27value%27%3A122%7D)
 
 # Usage
 
