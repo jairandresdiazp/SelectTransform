@@ -185,9 +185,9 @@ var template = {
 }
 ```
 
-### function httpPost
+### function http
 
-allows to recover by post any value of an external dataset
+allows to recover any value of an external dataset
 
 | Param | Description |Required |
 | ------ | ------ | ------ |
