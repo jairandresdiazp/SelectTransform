@@ -158,9 +158,9 @@ var root = sel.root();
 //  }
 ```
 
-## 3. Transform Post
+## 3. Transform HTTP
 
-> Take any JSON object, select and transform with a template JSON object
+> allows to recover by post any value of an external dataset
 
 ```js
 var data = {
@@ -169,7 +169,7 @@ var data = {
 
 var template = {
   "test":"{{id.toString().trim()}}",
-  "test2":"{{httpPost('webhook%2F860001619',null)}}"
+  "test2":"{{httpPost('webhook%2F860001619','GET',null)}}"
 }
 ```
 
@@ -192,6 +192,7 @@ allows to recover by post any value of an external dataset
 | Param | Description |Required |
 | ------ | ------ | ------ |
 | URL | url where the POST is made | yes|
+| Type | HTTP verb used is supported POST and GET | yes|
 | Headers | arrangement with the following structure that represents the header of the POST to send, by default it is assigned "Content-Type", "application / json" the others must be specified if not required you must send null, eg [{'name': 'filter','value': {'tabla': 'adquiriente','nit': '900032159'}},{'name': 'field','value': 'email'}]' | yes|
 | body | body of the request in JSON format if it does not exist, do not send the value eg httpPost ('url', null)}} | not|
 
@@ -207,7 +208,7 @@ the parameters of the function must be encoded [see](https://www.freeformatter.c
 ### example
 
 ```js
-httpPost('webhook%2F860001619','%5B%7B%27name%27%3A%20%27filter%27%2C%27value%27%3A%20%7B%27tabla%27%3A%20%27adquiriente%27%2C%27nit%27%3A%20%27900032159%27%7D%7D%2C%7B%27name%27%3A%20%27field%27%2C%27value%27%3A%20%27email%27%7D%5D')
+httpPost('webhook%2F860001619','POST','%5B%7B%27name%27%3A%20%27filter%27%2C%27value%27%3A%20%7B%27tabla%27%3A%20%27adquiriente%27%2C%27nit%27%3A%20%27900032159%27%7D%7D%2C%7B%27name%27%3A%20%27field%27%2C%27value%27%3A%20%27email%27%7D%5D')
 ```
 
 # Usage
