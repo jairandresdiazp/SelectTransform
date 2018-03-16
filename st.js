@@ -506,7 +506,7 @@
                         // Function expression with explicit 'return' expression
                         func = Function('with(this) {' + slot + '}').bind(data);
                     } else {
-                        if (/(httpPost)+\((.*)\)/.test(slot)) {
+                        if (/(httpPost)+\((.*)\)/g.test(slot)) {
                             var replaced = template;
                             var re = /\[\[(.*?)\]\]/g;
                             var re1 = /\{\{(.*?)\}\}/g;
@@ -607,30 +607,47 @@
             }
         },
         httpPost: function(URL, headers, body) {
-            var data = JSON.stringify(body);
-            var xhr = new XMLHttpRequest();
-            xhr.withCredentials = true;
-            xhr.open("POST", URL, false);
-            xhr.setRequestHeader("Content-Type", "application/json");
-            if (typeof headers === 'array') {
-                headers.forEach(setHeader);
+            try {
+                URL = decodeURIComponent(URL);
+                headers = decodeURIComponent(headers);
+				headers = JSON.stringify(eval('('+headers+')'));
+				headers= JSON.parse(headers);
+                body = decodeURIComponent(body);
+				body = JSON.stringify(eval('('+body+')'));
+				if(body ==="null" || body ==="undefined"){
+					body={};
+				}
+                var data = JSON.stringify(body);
+                var xhr = new XMLHttpRequest();
+                xhr.withCredentials = true;
+                xhr.open("POST", URL, false);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                if (typeof headers === 'object') {
+                    headers.forEach(setHeader);
 
-                function setHeader(item, indexHeader) {
-                    xhr.setRequestHeader(item.name, item.value);
+                    function setHeader(item, indexHeader) {
+						if(typeof item.value === 'object'){
+							xhr.setRequestHeader(item.name,JSON.stringify(item.value));
+						}else{
+							xhr.setRequestHeader(item.name,item.value);
+						}
+                    }
                 }
-            }
-            xhr.send(data);
-            if (xhr.readyState === 4) {
-                try {
-                    return JSON.parse(xhr.response);
-                } catch (err) {
-                    return xhr.response;
+                xhr.send(data);
+                if (xhr.readyState === 4) {
+                    try {
+                        return JSON.parse(xhr.response);
+                    } catch (err) {
+                        return xhr.response;
+                    }
+                } else {
+                    return {
+                        error: true,
+                        message: 'The maximum waiting time was exceeded  xhr.readyState ' + xhr.readyState
+                    }
                 }
-            } else {
-                return {
-                    error: true,
-                    message: 'The maximum waiting time was exceeded  xhr.readyState ' + xhr.readyState
-                }
+            } catch (err) {
+                return err;
             }
         },
     };
