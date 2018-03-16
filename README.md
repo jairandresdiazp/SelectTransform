@@ -207,7 +207,7 @@ the parameters of the function must be encoded [see](https://www.freeformatter.c
 ### example
 
 ```js
-httpPost('webhook%2F860001619','%5B%7B%27name%27%3A%20%27filter%27%2C%27value%27%3A%20%7B%27tabla%27%3A%20%27adquiriente%27%2C%27nit%27%3A%20%27900032159%27%7D%7D%2C%7B%27name%27%3A%20%27field%27%2C%27value%27%3A%20%27email%27%7D%5D'')
+httpPost('webhook%2F860001619','%5B%7B%27name%27%3A%20%27filter%27%2C%27value%27%3A%20%7B%27tabla%27%3A%20%27adquiriente%27%2C%27nit%27%3A%20%27900032159%27%7D%7D%2C%7B%27name%27%3A%20%27field%27%2C%27value%27%3A%20%27email%27%7D%5D')
 ```
 
 # Usage
