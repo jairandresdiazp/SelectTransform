@@ -506,7 +506,7 @@
                         // Function expression with explicit 'return' expression
                         func = Function('with(this) {' + slot + '}').bind(data);
                     } else {
-                        if (/(httpPost)+\((.*)\)/g.test(slot)) {
+                        if (/(http)+\((.*)\)/g.test(slot)) {
                             var replaced = template;
                             var re = /\[\[(.*?)\]\]/g;
                             var re1 = /\{\{(.*?)\}\}/g;
@@ -606,7 +606,7 @@
                 return template;
             }
         },
-        httpPost: function(URL, headers, body) {
+        http: function(URL, type, headers, body) {
             try {
                 URL = decodeURIComponent(URL);
                 headers = decodeURIComponent(headers);
@@ -617,12 +617,22 @@
                 if (body === "null" || body === "undefined") {
                     body = {};
                 }
+				if (headers === "null" || headers === "undefined") {
+                    headers = null;
+                }
                 var data = JSON.stringify(body);
                 var xhr = new XMLHttpRequest();
                 xhr.withCredentials = true;
-                xhr.open("POST", URL, false);
+                switch (type) {
+                    case "POST":
+                        xhr.open("POST", URL, false);
+                        break;
+                    case "GET":
+                        xhr.open("GET", URL, false);
+                        break;
+                }
                 xhr.setRequestHeader("Content-Type", "application/json");
-                if (typeof headers === 'object') {
+                if (typeof headers === 'object' && headers!==null) {
                     headers.forEach(setHeader);
 
                     function setHeader(item, indexHeader) {
@@ -633,7 +643,14 @@
                         }
                     }
                 }
-                xhr.send(data);
+                switch (type) {
+                    case "POST":
+                        xhr.send(data);
+                        break;
+                    case "GET":
+                        xhr.send(null);
+                        break;
+                }
                 if (xhr.readyState === 4) {
                     try {
                         return JSON.parse(xhr.response);
