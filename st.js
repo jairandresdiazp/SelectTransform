@@ -622,7 +622,6 @@
                 }
                 var data = JSON.stringify(body);
                 var xhr = new XMLHttpRequest();
-                xhr.withCredentials = true;
                 switch (type) {
                     case "POST":
                         xhr.open("POST", URL, false);
