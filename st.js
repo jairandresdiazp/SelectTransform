@@ -606,7 +606,7 @@
                 return template;
             }
         },
-        http: function(URL, type, headers, body) {
+        http: function(URL, type, mode, headers, body) {
             try {
                 URL = decodeURIComponent(URL);
                 headers = decodeURIComponent(headers);
@@ -617,49 +617,77 @@
                 if (body === "null" || body === "undefined") {
                     body = {};
                 }
-				if (headers === "null" || headers === "undefined") {
+                if (headers === "null" || headers === "undefined") {
                     headers = null;
                 }
                 var data = JSON.stringify(body);
-                var xhr = new XMLHttpRequest();
-                switch (type) {
-                    case "POST":
-                        xhr.open("POST", URL, false);
-                        break;
-                    case "GET":
-                        xhr.open("GET", URL, false);
-                        break;
-                }
-                xhr.setRequestHeader("Content-Type", "application/json");
-                if (typeof headers === 'object' && headers!==null) {
-                    headers.forEach(setHeader);
-
-                    function setHeader(item, indexHeader) {
-                        if (typeof item.value === 'object') {
-                            xhr.setRequestHeader(item.name, JSON.stringify(item.value));
-                        } else {
-                            xhr.setRequestHeader(item.name, item.value);
-                        }
-                    }
-                }
-                switch (type) {
-                    case "POST":
-                        xhr.send(data);
-                        break;
-                    case "GET":
-                        xhr.send(null);
-                        break;
-                }
-                if (xhr.readyState === 4) {
+                var res;
+                if (mode == 1) {
                     try {
-                        return JSON.parse(xhr.response);
+                        var request = require('sync-request');
+                        headers['Content-Type'] = 'application/json';
+                        switch (type) {
+                            case "POST":
+                                res = request('POST', URL, {
+                                    headers: headers,
+                                    json: body
+                                });
+                                break;
+                            case "GET":
+                                res = request('GET', URL, {
+                                    headers: headers
+                                });
+                                break;
+                        }
+                        return JSON.parse(res.getBody('utf8'));
                     } catch (err) {
-                        return xhr.response;
+                        return res.getBody('utf8');
                     }
                 } else {
-                    return {
-                        error: true,
-                        message: 'The maximum waiting time was exceeded  xhr.readyState ' + xhr.readyState
+                    var xhr = new XMLHttpRequest();
+                    switch (type) {
+                        case "POST":
+                            xhr.open("POST", URL, false);
+                            break;
+                        case "GET":
+                            xhr.open("GET", URL, false);
+                            break;
+                    }
+                    xhr.setRequestHeader("Content-Type", "application/json");
+                    if (typeof headers === 'object' && headers !== null) {
+                        headers.forEach(setHeader);
+
+                        function setHeader(item, indexHeader) {
+                            if (typeof item.value === 'object') {
+                                xhr.setRequestHeader(item.name, JSON.stringify(item.value));
+                            } else {
+                                xhr.setRequestHeader(item.name, item.value);
+                            }
+                        }
+                    }
+                    switch (type) {
+                        case "POST":
+                            try {
+                                xhr.send(data);
+                            } catch (err) {}
+                            break;
+                        case "GET":
+                            try {
+                                xhr.send();
+                            } catch (err) {}
+                            break;
+                    }
+                    if (xhr.readyState === 4) {
+                        try {
+                            return JSON.parse(xhr.response);
+                        } catch (err) {
+                            return xhr.response;
+                        }
+                    } else {
+                        return {
+                            error: true,
+                            message: 'The maximum waiting time was exceeded  xhr.readyState ' + xhr.readyState
+                        }
                     }
                 }
             } catch (err) {
