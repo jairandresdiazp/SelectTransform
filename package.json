@@ -39,6 +39,9 @@
     "mocha": "^3.5.3",
     "underscore": "^1.8.3"
   },
+  "dependencies":{
+    "sync-request": "^6.0.0"
+  },
   "directories": {
     "test": "test"
   },
