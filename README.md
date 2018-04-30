@@ -193,9 +193,8 @@ allows to recover any value of an external dataset
 | ------ | ------ | ------ |
 | URL | url where the POST is made | yes|
 | Type | HTTP verb used is supported POST and GET | yes|
-| Mode | Web =0 , Server =1  | yes|
 | Headers | arrangement with the following structure that represents the header of the POST to send, by default it is assigned "Content-Type", "application / json" the others must be specified if not required you must send null, eg [{'name': 'filter','value': {'tabla': 'adquiriente','nit': '900032159'}},{'name': 'field','value': 'email'}]' | yes|
-| body | body of the request in JSON format if it does not exist, do not send the value eg httpPost ('url', null)}} | not|
+| body | body of the request in JSON format if it does not exist, do not send the value eg httpPost ('url', null)}} | yes|
 
 
 in case of requiring values of the data as parameter of the function use the syntax
