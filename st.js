@@ -486,6 +486,7 @@
             var variable = options.variable;
             var data = options.data;
             var template = options.template;
+            var evaluated;
             try {
                 // 1. Evaluate the variable
                 var slot = variable.replace(re, '$1');
@@ -493,6 +494,7 @@
                 // data must exist. Otherwise replace with blank
                 if (data) {
                     var func;
+                    var ishttp = false;
                     // Attach $root to each node so that we can reference it from anywhere
                     var data_type = typeof data;
                     if (['number', 'string', 'array', 'boolean', 'function'].indexOf(data_type === -1)) {
@@ -507,6 +509,7 @@
                         func = Function('with(this) {' + slot + '}').bind(data);
                     } else {
                         if (/(http)+\((.*)\)/g.test(slot)) {
+                            ishttp = true;
                             var replaced = template;
                             var re = /\[\[(.*?)\]\]/g;
                             var re1 = /\{\{(.*?)\}\}/g;
@@ -515,11 +518,10 @@
                             // for example '[[this.item]] is [[this.user]]'s' has two variables: ['this.item', 'this.user']
                             var variables = template.match(re);
                             if (variables) {
-
                                 // Fill out the template for each variable
                                 for (var i = 0; i < variables.length; i++) {
-                                    var variable = variables[i];
-                                    slot = variable.replace(re, '$1');
+                                    var variable_ = variables[i];
+                                    slot = variable_.replace(re, '$1');
                                     func = Function('with(this) {return (' + slot + ')}').bind(data);
                                     var evaluated = func();
                                     delete data.$root; // remove $root now that the parsing is over
@@ -532,7 +534,7 @@
                                         // (example: var a = [1,2,3,4]; var b = a[5];)
                                         evaluated = null;
                                     } else {
-                                        template = template.replace(variable, evaluated);
+                                        template = template.replace(variable_, evaluated);
                                         slot = template.replace(re1, '$1');
                                     }
                                 }
@@ -545,48 +547,76 @@
                             // Ordinary simple expression that
                             func = Function('with(this) {return (' + slot + ')}').bind(data);
                         }
-
                     }
-                    var evaluated = func();
-                    delete data.$root; // remove $root now that the parsing is over
-                    if (evaluated) {
-                        // In case of primitive types such as String, need to call valueOf() to get the actual value instead of the promoted object
-                        evaluated = evaluated.valueOf();
-                    }
-                    if (typeof evaluated === 'undefined') {
-                        // it tried to evaluate since the variable existed, but ended up evaluating to undefined
-                        // (example: var a = [1,2,3,4]; var b = a[5];)
-                        return template;
-                    } else {
-                        // 2. Fill out the template with the evaluated value
-                        // Be forgiving and print any type, even functions, so it's easier to debug
-                        if (evaluated) {
-                            // IDEAL CASE : Return the replaced template
-                            if (template) {
-                                // if the template is a pure template with no additional static text,
-                                // And if the evaluated value is an object or an array, we return the object itself instead of
-                                // replacing it into template via string replace, since that will turn it into a string.
-                                if (full_re.test(template)) {
-                                    return evaluated;
+                    if (ishttp === true) {
+                        func().then(
+                            function(res) {
+                                if (template) {
+                                    if (full_re.test(template)) {
+									  return res;  
+                                    } else {
+                                        return template.replace(variable, res);
+                                    }
                                 } else {
-                                    return template.replace(variable, evaluated);
+                                    return res;
                                 }
-                            } else {
-                                return evaluated;
                             }
-                        } else {
-                            // Treat false or null as blanks (so that #if can handle it)
-                            if (template) {
-                                // if the template is a pure template with no additional static text,
-                                // And if the evaluated value is an object or an array, we return the object itself instead of
-                                // replacing it into template via string replace, since that will turn it into a string.
-                                if (full_re.test(template)) {
-                                    return evaluated;
+                        ).catch(
+                            function(error) {
+                                if (template) {
+                                    if (full_re.test(template)) {
+                                        return error;
+                                    } else {
+                                        return template.replace(variable, error);
+                                    }
+                                    return '';
                                 } else {
-                                    return template.replace(variable, '');
+                                    return error;
+                                }
+                            }
+                        );
+                    } else {
+                        var evaluated = func();
+                        delete data.$root; // remove $root now that the parsing is over
+                        if (evaluated) {
+                            // In case of primitive types such as String, need to call valueOf() to get the actual value instead of the promoted object
+                            evaluated = evaluated.valueOf();
+                        }
+                        if (typeof evaluated === 'undefined') {
+                            // it tried to evaluate since the variable existed, but ended up evaluating to undefined
+                            // (example: var a = [1,2,3,4]; var b = a[5];)
+                            return template;
+                        } else {
+                            // 2. Fill out the template with the evaluated value
+                            // Be forgiving and print any type, even functions, so it's easier to debug
+                            if (evaluated) {
+                                // IDEAL CASE : Return the replaced template
+                                if (template) {
+                                    // if the template is a pure template with no additional static text,
+                                    // And if the evaluated value is an object or an array, we return the object itself instead of
+                                    // replacing it into template via string replace, since that will turn it into a string.
+                                    if (full_re.test(template)) {
+                                        return evaluated;
+                                    } else {
+                                        return template.replace(variable, evaluated);
+                                    }
+                                } else {
+                                    return evaluated;
                                 }
                             } else {
-                                return '';
+                                // Treat false or null as blanks (so that #if can handle it)
+                                if (template) {
+                                    // if the template is a pure template with no additional static text,
+                                    // And if the evaluated value is an object or an array, we return the object itself instead of
+                                    // replacing it into template via string replace, since that will turn it into a string.
+                                    if (full_re.test(template)) {
+                                        return evaluated;
+                                    } else {
+                                        return template.replace(variable, '');
+                                    }
+                                } else {
+                                    return '';
+                                }
                             }
                         }
                     }
@@ -607,24 +637,30 @@
             }
         },
         http: function(URL, type, mode, headers, body) {
-            try {
-                URL = decodeURIComponent(URL);
-                headers = decodeURIComponent(headers);
-                headers = JSON.stringify(eval('(' + headers + ')'));
-                headers = JSON.parse(headers);
-                body = decodeURIComponent(body);
-                body = JSON.stringify(eval('(' + body + ')'));
-                if (body === "null" || body === "undefined") {
-                    body = {};
-                }
-                if (headers === "null" || headers === "undefined") {
-                    headers = null;
-                }
-                var data = JSON.stringify(body);
-                var res;
-                if (mode == 1) {
-                    try {
-                        var request = require('sync-request');
+            return new Promise(resolve => {
+                try {
+
+                    URL = decodeURIComponent(URL);
+                    headers = decodeURIComponent(headers);
+                    headers = JSON.stringify(eval('(' + headers + ')'));
+                    headers = JSON.parse(headers);
+                    body = decodeURIComponent(body);
+                    body = JSON.stringify(eval('(' + body + ')'));
+                    if (body === "null" || body === "undefined") {
+                        body = {};
+                    }
+                    if (headers === "null" || headers === "undefined") {
+                        headers = null;
+                    }
+                    var data = JSON.stringify(body);
+                    var res;
+                    if (mode == 1) {
+                        try {
+                            if (headers === null) {
+                                headers = {};
+                            }
+                            /*
+						var request = require('sync-request');
                         headers['Content-Type'] = 'application/json';
                         switch (type) {
                             case "POST":
@@ -640,59 +676,98 @@
                                 break;
                         }
                         return JSON.parse(res.getBody('utf8'));
-                    } catch (err) {
-                        return res.getBody('utf8');
-                    }
-                } else {
-                    var xhr = new XMLHttpRequest();
-                    switch (type) {
-                        case "POST":
-                            xhr.open("POST", URL, false);
-                            break;
-                        case "GET":
-                            xhr.open("GET", URL, false);
-                            break;
-                    }
-                    xhr.setRequestHeader("Content-Type", "application/json");
-                    if (typeof headers === 'object' && headers !== null) {
-                        headers.forEach(setHeader);
+						*/
+                            var request = require("request");
+                            headers['Content-Type'] = 'application/json';
+                            var options;
+                            switch (type) {
+                                case "POST":
+                                    options = {
+                                        method: 'POST',
+                                        url: URL,
+                                        headers: headers,
+                                        body: body,
+                                        json: true,
+                                        rejectUnauthorized: false,
+                                        requestCert: true,
+                                        agent: false
+                                    };
+                                    break;
+                                case "GET":
+                                    options = {
+                                        method: 'GET',
+                                        url: URL,
+                                        headers: headers,
+                                        rejectUnauthorized: false,
+                                        requestCert: true,
+                                        agent: false
+                                    };
+                                    break;
+                            }
+                            request(options, function(error, response, body) {
+                                if (error) {
+                                    //return error;
+                                    reject(error)
+                                } else {
+                                    //return JSON.parse(body);
+                                    resolve(body);
+                                }
+                            });
+                        } catch (err) {
+                            //return err;
+                            reject(err)
+                        }
+                    } else {
+                        var xhr = new XMLHttpRequest();
+                        switch (type) {
+                            case "POST":
+                                xhr.open("POST", URL, false);
+                                break;
+                            case "GET":
+                                xhr.open("GET", URL, false);
+                                break;
+                        }
+                        xhr.setRequestHeader("Content-Type", "application/json");
+                        if (typeof headers === 'object' && headers !== null) {
+                            headers.forEach(setHeader);
 
-                        function setHeader(item, indexHeader) {
-                            if (typeof item.value === 'object') {
-                                xhr.setRequestHeader(item.name, JSON.stringify(item.value));
-                            } else {
-                                xhr.setRequestHeader(item.name, item.value);
+                            function setHeader(item, indexHeader) {
+                                if (typeof item.value === 'object') {
+                                    xhr.setRequestHeader(item.name, JSON.stringify(item.value));
+                                } else {
+                                    xhr.setRequestHeader(item.name, item.value);
+                                }
+                            }
+                        }
+                        switch (type) {
+                            case "POST":
+                                try {
+                                    xhr.send(data);
+                                } catch (err) {}
+                                break;
+                            case "GET":
+                                try {
+                                    xhr.send();
+                                } catch (err) {}
+                                break;
+                        }
+                        if (xhr.readyState === 4) {
+                            try {
+                                return JSON.parse(xhr.response);
+                            } catch (err) {
+                                return xhr.response;
+                            }
+                        } else {
+                            return {
+                                error: true,
+                                message: 'The maximum waiting time was exceeded  xhr.readyState ' + xhr.readyState
                             }
                         }
                     }
-                    switch (type) {
-                        case "POST":
-                            try {
-                                xhr.send(data);
-                            } catch (err) {}
-                            break;
-                        case "GET":
-                            try {
-                                xhr.send();
-                            } catch (err) {}
-                            break;
-                    }
-                    if (xhr.readyState === 4) {
-                        try {
-                            return JSON.parse(xhr.response);
-                        } catch (err) {
-                            return xhr.response;
-                        }
-                    } else {
-                        return {
-                            error: true,
-                            message: 'The maximum waiting time was exceeded  xhr.readyState ' + xhr.readyState
-                        }
-                    }
+                } catch (err) {
+                    return err;
                 }
-            } catch (err) {
-                return err;
-            }
+            });
         },
     };
     var SELECT = {
