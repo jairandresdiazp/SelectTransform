@@ -494,7 +494,6 @@
                 // data must exist. Otherwise replace with blank
                 if (data) {
                     var func;
-                    var ishttp = false;
                     // Attach $root to each node so that we can reference it from anywhere
                     var data_type = typeof data;
                     if (['number', 'string', 'array', 'boolean', 'function'].indexOf(data_type === -1)) {
@@ -509,7 +508,6 @@
                         func = Function('with(this) {' + slot + '}').bind(data);
                     } else {
                         if (/(http)+\((.*)\)/g.test(slot)) {
-                            ishttp = true;
                             var replaced = template;
                             var re = /\[\[(.*?)\]\]/g;
                             var re1 = /\{\{(.*?)\}\}/g;
@@ -548,75 +546,46 @@
                             func = Function('with(this) {return (' + slot + ')}').bind(data);
                         }
                     }
-                    if (ishttp === true) {
-                        func().then(
-                            function(res) {
-                                if (template) {
-                                    if (full_re.test(template)) {
-									  return res;  
-                                    } else {
-                                        return template.replace(variable, res);
-                                    }
-                                } else {
-                                    return res;
-                                }
-                            }
-                        ).catch(
-                            function(error) {
-                                if (template) {
-                                    if (full_re.test(template)) {
-                                        return error;
-                                    } else {
-                                        return template.replace(variable, error);
-                                    }
-                                    return '';
-                                } else {
-                                    return error;
-                                }
-                            }
-                        );
+                    var evaluated = func();
+                    delete data.$root; // remove $root now that the parsing is over
+                    if (evaluated) {
+                        // In case of primitive types such as String, need to call valueOf() to get the actual value instead of the promoted object
+                        evaluated = evaluated.valueOf();
+                    }
+                    if (typeof evaluated === 'undefined' || evaluated === 'undefined') {
+                        // it tried to evaluate since the variable existed, but ended up evaluating to undefined
+                        // (example: var a = [1,2,3,4]; var b = a[5];)
+                        return template;
                     } else {
-                        var evaluated = func();
-                        delete data.$root; // remove $root now that the parsing is over
+                        // 2. Fill out the template with the evaluated value
+                        // Be forgiving and print any type, even functions, so it's easier to debug
                         if (evaluated) {
-                            // In case of primitive types such as String, need to call valueOf() to get the actual value instead of the promoted object
-                            evaluated = evaluated.valueOf();
-                        }
-                        if (typeof evaluated === 'undefined') {
-                            // it tried to evaluate since the variable existed, but ended up evaluating to undefined
-                            // (example: var a = [1,2,3,4]; var b = a[5];)
-                            return template;
-                        } else {
-                            // 2. Fill out the template with the evaluated value
-                            // Be forgiving and print any type, even functions, so it's easier to debug
-                            if (evaluated) {
-                                // IDEAL CASE : Return the replaced template
-                                if (template) {
-                                    // if the template is a pure template with no additional static text,
-                                    // And if the evaluated value is an object or an array, we return the object itself instead of
-                                    // replacing it into template via string replace, since that will turn it into a string.
-                                    if (full_re.test(template)) {
-                                        return evaluated;
-                                    } else {
-                                        return template.replace(variable, evaluated);
-                                    }
-                                } else {
+                            // IDEAL CASE : Return the replaced template
+                            if (template) {
+                                // if the template is a pure template with no additional static text,
+                                // And if the evaluated value is an object or an array, we return the object itself instead of
+                                // replacing it into template via string replace, since that will turn it into a string.
+                                if (full_re.test(template)) {
                                     return evaluated;
+                                } else {
+                                    return template.replace(variable, evaluated);
                                 }
                             } else {
-                                // Treat false or null as blanks (so that #if can handle it)
-                                if (template) {
-                                    // if the template is a pure template with no additional static text,
-                                    // And if the evaluated value is an object or an array, we return the object itself instead of
-                                    // replacing it into template via string replace, since that will turn it into a string.
-                                    if (full_re.test(template)) {
-                                        return evaluated;
-                                    } else {
-                                        return template.replace(variable, '');
-                                    }
+                                return evaluated;
+                            }
+                        } else {
+                            // Treat false or null as blanks (so that #if can handle it)
+                            if (template) {
+                                // if the template is a pure template with no additional static text,
+                                // And if the evaluated value is an object or an array, we return the object itself instead of
+                                // replacing it into template via string replace, since that will turn it into a string.
+                                if (full_re.test(template)) {
+                                    return evaluated;
                                 } else {
-                                    return '';
+                                    return template.replace(variable, '');
                                 }
+                            } else {
+                                return '';
                             }
                         }
                     }
@@ -637,137 +606,74 @@
             }
         },
         http: function(URL, type, mode, headers, body) {
-            return new Promise(resolve => {
-                try {
+            try {
 
-                    URL = decodeURIComponent(URL);
-                    headers = decodeURIComponent(headers);
-                    headers = JSON.stringify(eval('(' + headers + ')'));
-                    headers = JSON.parse(headers);
-                    body = decodeURIComponent(body);
-                    body = JSON.stringify(eval('(' + body + ')'));
-                    if (body === "null" || body === "undefined") {
-                        body = {};
+                URL = decodeURIComponent(URL);
+                headers = decodeURIComponent(headers);
+                headers = JSON.stringify(eval('(' + headers + ')'));
+                headers = JSON.parse(headers);
+                body = decodeURIComponent(body);
+                body = JSON.stringify(eval('(' + body + ')'));
+                if (body === "null" || body === "undefined") {
+                    body = {};
+                }
+                if (headers === "null" || headers === "undefined") {
+                    headers = null;
+                }
+                var data = JSON.stringify(body);
+                var res;
+                if (mode == 1) {
+                    return 'undefined';
+                } else {
+                    var xhr = new XMLHttpRequest();
+                    switch (type) {
+                        case "POST":
+                            xhr.open("POST", URL, false);
+                            break;
+                        case "GET":
+                            xhr.open("GET", URL, false);
+                            break;
                     }
-                    if (headers === "null" || headers === "undefined") {
-                        headers = null;
-                    }
-                    var data = JSON.stringify(body);
-                    var res;
-                    if (mode == 1) {
-                        try {
-                            if (headers === null) {
-                                headers = {};
+                    xhr.setRequestHeader("Content-Type", "application/json");
+                    if (typeof headers === 'object' && headers !== null) {
+                        headers.forEach(setHeader);
+
+                        function setHeader(item, indexHeader) {
+                            if (typeof item.value === 'object') {
+                                xhr.setRequestHeader(item.name, JSON.stringify(item.value));
+                            } else {
+                                xhr.setRequestHeader(item.name, item.value);
                             }
-                            /*
-						var request = require('sync-request');
-                        headers['Content-Type'] = 'application/json';
-                        switch (type) {
-                            case "POST":
-                                res = request('POST', URL, {
-                                    headers: headers,
-                                    json: body
-                                });
-                                break;
-                            case "GET":
-                                res = request('GET', URL, {
-                                    headers: headers
-                                });
-                                break;
                         }
-                        return JSON.parse(res.getBody('utf8'));
-						*/
-                            var request = require("request");
-                            headers['Content-Type'] = 'application/json';
-                            var options;
-                            switch (type) {
-                                case "POST":
-                                    options = {
-                                        method: 'POST',
-                                        url: URL,
-                                        headers: headers,
-                                        body: body,
-                                        json: true,
-                                        rejectUnauthorized: false,
-                                        requestCert: true,
-                                        agent: false
-                                    };
-                                    break;
-                                case "GET":
-                                    options = {
-                                        method: 'GET',
-                                        url: URL,
-                                        headers: headers,
-                                        rejectUnauthorized: false,
-                                        requestCert: true,
-                                        agent: false
-                                    };
-                                    break;
-                            }
-                            request(options, function(error, response, body) {
-                                if (error) {
-                                    //return error;
-                                    reject(error)
-                                } else {
-                                    //return JSON.parse(body);
-                                    resolve(body);
-                                }
-                            });
+                    }
+                    switch (type) {
+                        case "POST":
+                            try {
+                                xhr.send(data);
+                            } catch (err) {}
+                            break;
+                        case "GET":
+                            try {
+                                xhr.send();
+                            } catch (err) {}
+                            break;
+                    }
+                    if (xhr.readyState === 4) {
+                        try {
+                            return JSON.parse(xhr.response);
                         } catch (err) {
-                            //return err;
-                            reject(err)
+                            return xhr.response;
                         }
                     } else {
-                        var xhr = new XMLHttpRequest();
-                        switch (type) {
-                            case "POST":
-                                xhr.open("POST", URL, false);
-                                break;
-                            case "GET":
-                                xhr.open("GET", URL, false);
-                                break;
-                        }
-                        xhr.setRequestHeader("Content-Type", "application/json");
-                        if (typeof headers === 'object' && headers !== null) {
-                            headers.forEach(setHeader);
-
-                            function setHeader(item, indexHeader) {
-                                if (typeof item.value === 'object') {
-                                    xhr.setRequestHeader(item.name, JSON.stringify(item.value));
-                                } else {
-                                    xhr.setRequestHeader(item.name, item.value);
-                                }
-                            }
-                        }
-                        switch (type) {
-                            case "POST":
-                                try {
-                                    xhr.send(data);
-                                } catch (err) {}
-                                break;
-                            case "GET":
-                                try {
-                                    xhr.send();
-                                } catch (err) {}
-                                break;
-                        }
-                        if (xhr.readyState === 4) {
-                            try {
-                                return JSON.parse(xhr.response);
-                            } catch (err) {
-                                return xhr.response;
-                            }
-                        } else {
-                            return {
-                                error: true,
-                                message: 'The maximum waiting time was exceeded  xhr.readyState ' + xhr.readyState
-                            }
+                        return {
+                            error: true,
+                            message: 'The maximum waiting time was exceeded  xhr.readyState ' + xhr.readyState
                         }
                     }
-                } catch (err) {
-                    return err;
                 }
-            });
+            } catch (err) {
+                return err;
+            }
         },
     };
     var SELECT = {
